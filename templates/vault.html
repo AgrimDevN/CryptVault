@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row between">
+  <h1>My vault <span class="pill">{{ entries|length }} item{{ '' if entries|length == 1 else 's' }}</span></h1>
+  <a class="btn" href="{{ url_for('new_entry') }}">+ Add credential</a>
+</div>
+{% if alerts %}
+<div class="flash error"><strong>Integrity alerts</strong><ul>{% for a in alerts %}<li>{{ a }}</li>{% endfor %}</ul></div>
+{% else %}
+<div class="flash ok small">&#10003; All records passed SHA-256, AES-GCM/AAD and TEVHC version checks.</div>
+{% endif %}
+<form class="row search" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search title, username, URL, notes">
+  <select name="category">
+    <option value="">All categories</option>
+    {% for c in categories %}<option {% if c == category %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select>
+  <button class="btn ghost">Filter</button>
+</form>
+<table class="grid">
+  <thead><tr><th>Title</th><th>Category</th><th>Username</th><th>Password</th><th>Ver.</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for e in entries %}
+  <tr class="{{ 'bad' if e.status != 'OK' }}">
+    <td><strong>{{ e.title }}</strong>{% if e.url %}<div class="muted small">{{ e.url }}</div>{% endif %}</td>
+    <td><span class="tag">{{ e.category }}</span></td>
+    <td>{{ e.username }}</td>
+    <td>{% if e.status == 'OK' %}<span class="secret" data-secret="{{ e.password }}">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span>
+        <button class="mini" data-action="reveal">Show</button><button class="mini" data-action="copy">Copy</button>{% endif %}</td>
+    <td>v{{ e.version }}</td>
+    <td>{% if e.status == 'OK' %}<span class="ok-dot">Verified</span>{% else %}<span class="bad-dot">{{ e.status }}</span>{% endif %}</td>
+    <td class="actions">{% if e.status == 'OK' %}
+      <a class="mini" href="{{ url_for('edit_entry', record_id=e.record_id) }}">Edit</a>
+      <form method="post" action="{{ url_for('delete_entry', record_id=e.record_id) }}" class="inline" data-confirm="Delete this credential?">
+        <input type="hidden" name="csrf" value="{{ csrf_token }}"><button class="mini danger">Delete</button></form>{% endif %}
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="7" class="muted">No credentials yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

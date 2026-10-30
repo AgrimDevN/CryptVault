@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h1>Change master password</h1>
+  <p class="muted">Only the VMK envelope is re-wrapped under a new Argon2id KEK; no credential is re-encrypted.</p>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <label>Current master password <input type="password" name="old" required></label>
+    <label>New master password <input type="password" name="new" id="pw" data-strength="meter" required></label>
+    <div class="meter" id="meter"><div class="bar"></div><span class="label"></span><ul class="hints"></ul></div>
+    <label>Confirm new password <input type="password" name="confirm" required></label>
+    <button class="btn">Re-wrap vault key</button>
+  </form>
+  <p class="muted small">Auto-lock: vault locks after {{ timeout // 60 }} min of inactivity.</p>
+</section>
+{% endblock %}

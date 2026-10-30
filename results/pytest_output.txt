@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/CryptVault
+plugins: anyio-4.15.1
+collecting ... collected 33 items
+
+tests/test_app.py::test_full_flow PASSED                                 [  3%]
+tests/test_app.py::test_post_without_csrf_rejected PASSED                [  6%]
+tests/test_app.py::test_weak_master_password_rejected PASSED             [  9%]
+tests/test_app.py::test_security_headers PASSED                          [ 12%]
+tests/test_app.py::test_auto_lock PASSED                                 [ 15%]
+tests/test_crypto.py::test_pbkdf2_verifier_is_salted_and_constant PASSED [ 18%]
+tests/test_crypto.py::test_argon2id_kek_is_256_bit_and_salted PASSED     [ 21%]
+tests/test_crypto.py::test_vmk_wrap_unwrap_and_wrong_kek PASSED          [ 24%]
+tests/test_crypto.py::test_hkdf_domain_separation PASSED                 [ 27%]
+tests/test_crypto.py::test_record_roundtrip_and_fresh_nonce PASSED       [ 30%]
+tests/test_crypto.py::test_aad_context_binding[record_id-rec-b] PASSED   [ 33%]
+tests/test_crypto.py::test_aad_context_binding[record_version-2] PASSED  [ 36%]
+tests/test_crypto.py::test_aad_context_binding[device_id-dev-evil] PASSED [ 39%]
+tests/test_crypto.py::test_aad_context_binding[vault_id-v2] PASSED       [ 42%]
+tests/test_crypto.py::test_bit_flip_detected_by_sha256_and_gcm PASSED    [ 45%]
+tests/test_vault.py::test_register_unlock_and_wrong_password PASSED      [ 48%]
+tests/test_vault.py::test_same_password_gives_independent_vault_keys PASSED [ 51%]
+tests/test_vault.py::test_crud_search_and_versions PASSED                [ 54%]
+tests/test_vault.py::test_database_contains_no_plaintext PASSED          [ 57%]
+tests/test_vault.py::test_ciphertext_tampering_detected PASSED           [ 60%]
+tests/test_vault.py::test_record_swap_detected_by_aad PASSED             [ 63%]
+tests/test_vault.py::test_rollback_attack_detected PASSED                [ 66%]
+tests/test_vault.py::test_audit_event_forgery_detected PASSED            [ 69%]
+tests/test_vault.py::test_history_truncation_detected PASSED             [ 72%]
+tests/test_vault.py::test_injected_and_deleted_records_detected PASSED   [ 75%]
+tests/test_vault.py::test_change_master_password_rewraps_only PASSED     [ 78%]
+tests/test_vault.py::test_lock_wipes_key PASSED                          [ 81%]
+tests/test_vault.py::test_generator_policy PASSED                        [ 84%]
+tests/test_vault.py::test_strength_scores[password-0] PASSED             [ 87%]
+tests/test_vault.py::test_strength_scores[abcd1234-0] PASSED             [ 90%]
+tests/test_vault.py::test_strength_scores[Summer2026-2] PASSED           [ 93%]
+tests/test_vault.py::test_strength_scores[Tr0ub4dor&3xK!-3] PASSED       [ 96%]
+tests/test_vault.py::test_strength_scores[x7#Qm!v9Lp@2Rz$8Wk-4] PASSED   [100%]
+
+============================== 33 passed in 0.77s ==============================

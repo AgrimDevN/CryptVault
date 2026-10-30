@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth card">
+  <h1>Create a vault</h1>
+  <p class="muted">Your master password is never stored. A random 256-bit vault key is generated and wrapped with it.</p>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <label>Username <input name="username" autocomplete="username" required></label>
+    <label>Master password <input type="password" name="password" id="pw" data-strength="meter" autocomplete="new-password" required></label>
+    <div class="meter" id="meter"><div class="bar"></div><span class="label"></span><ul class="hints"></ul></div>
+    <label>Confirm master password <input type="password" name="confirm" autocomplete="new-password" required></label>
+    <button class="btn">Create vault</button>
+  </form>
+  <p class="muted">Already registered? <a href="{{ url_for('login') }}">Unlock</a></p>
+</section>
+{% endblock %}

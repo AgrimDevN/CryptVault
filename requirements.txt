@@ -1,0 +1,4 @@
+Flask>=3.0
+cryptography>=44.0   # provides AES-GCM, HKDF, PBKDF2 (and Argon2id when linked to OpenSSL 3.2+)
+argon2-cffi>=23.1    # Argon2id fallback for OpenSSL < 3.2 builds (e.g. conda)
+pytest>=8.0

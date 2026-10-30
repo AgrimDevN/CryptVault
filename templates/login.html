@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth card">
+  <h1>Unlock your vault</h1>
+  <p class="muted">Master password &rarr; PBKDF2 login check &rarr; Argon2id KEK &rarr; unwrap VMK</p>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <label>Username <input name="username" autocomplete="username" required></label>
+    <label>Master password <input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn">Unlock</button>
+  </form>
+  <p class="muted">No account? <a href="{{ url_for('register') }}">Create a vault</a></p>
+</section>
+{% endblock %}

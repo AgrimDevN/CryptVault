@@ -1,0 +1,12 @@
+# Local vault data - never commit
+instance/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Environment
+.env

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tamper-evident vault history chain</h1>
+{% if report.valid %}
+<div class="flash ok">&#10003; Chain verified from genesis: {{ report.length }} events, every HMAC link valid. Head: <code>{{ report.head[:16] }}&hellip;</code></div>
+{% else %}
+<div class="flash error"><strong>Chain verification FAILED</strong><ul>{% for p in report.problems %}<li>{{ p }}</li>{% endfor %}</ul></div>
+{% endif %}
+<table class="grid mono">
+  <thead><tr><th>Seq</th><th>Event</th><th>Record</th><th>Ver.</th><th>Ciphertext SHA-256</th><th>Prev MAC</th><th>Event MAC</th><th>Time (UTC)</th></tr></thead>
+  <tbody>
+  {% for e in events %}
+  <tr><td>{{ e.seq }}</td><td><span class="tag">{{ e.event_type }}</span></td><td>{{ e.record_id or '-' }}</td>
+      <td>{{ e.record_version or '-' }}</td><td>{{ (e.ciphertext_hash or '-')[:12] }}</td>
+      <td>{{ e.prev_mac[:12] }}</td><td>{{ e.event_mac[:12] }}</td><td>{{ e.timestamp[11:19] }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

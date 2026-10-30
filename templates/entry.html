@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h1>{{ 'Add credential' if mode == 'new' else 'Edit credential' }}</h1>
+  {% if mode == 'edit' %}<p class="muted">Saving creates v{{ entry.version + 1 }} with a fresh nonce and AAD.</p>{% endif %}
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <div class="two">
+      <label>Title <input name="title" value="{{ entry.title }}" required></label>
+      <label>Category <input name="category" value="{{ entry.category }}" list="cats" placeholder="General"></label>
+    </div>
+    <datalist id="cats"><option>Social</option><option>Banking</option><option>Work</option><option>Email</option><option>Shopping</option><option>Academic</option></datalist>
+    <label>Website URL <input name="url" value="{{ entry.url }}"></label>
+    <label>Username / email <input name="username" value="{{ entry.username }}"></label>
+    <label>Password
+      <span class="row"><input type="text" name="password" id="pw" data-strength="meter" value="{{ entry.password }}">
+      <button type="button" class="btn ghost" data-action="generate">Generate</button></span>
+    </label>
+    <div class="meter" id="meter"><div class="bar"></div><span class="label"></span><ul class="hints"></ul></div>
+    <label>Notes <textarea name="notes" rows="3">{{ entry.notes }}</textarea></label>
+    <div class="row"><button class="btn">Encrypt &amp; save</button><a class="btn ghost" href="{{ url_for('vault') }}">Cancel</a></div>
+  </form>
+</section>
+{% endblock %}

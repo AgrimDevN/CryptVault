@@ -1,0 +1,70 @@
+
+========================================================================
+  1. REGISTRATION  (master password -> PBKDF2 verifier + Argon2id KEK -> wrapped random VMK)
+========================================================================
+  user_id         : usr-0b78bf70            vault_id: vault-468b6b55
+  auth_salt       : 527b41bfad6b9676807ae2d1b7b56a46
+  auth_hash       : 6aed2fd19360599075c91424dea761e1f0f25b6e989d1a1f...  (PBKDF2-SHA256, 600k)
+  kek_salt        : 970947388b53394154ce4dedced4b274
+  vmk_wrapped     : 3f1ac519306b28d3a83543757d15aa9372847db5a1fb7f7f...  (AES-256-GCM, 48 B)
+  registration    : 479 ms
+
+========================================================================
+  2. LOGIN + VAULT UNLOCK
+========================================================================
+  [OK] PBKDF2 verifier matched (constant-time compare)
+  [OK] Argon2id(m=64 MiB, t=3, p=4) -> KEK -> VMK unwrapped, verifier valid
+  unlock time     : 504 ms
+  [BLOCKED] wrong password -> VaultError: Invalid username or password
+
+========================================================================
+  3. CBLKE RECORD ENCRYPTION  (HKDF per-record key + AES-256-GCM + AAD)
+========================================================================
+  record_id       : rec-977580ad   version: 1   algorithm: AES-256-GCM
+  nonce (96-bit)  : 031e62af8b34252c4cd7e4e8
+  ciphertext      : 4f6456de4b6a5b7641181d343e9357302fdedd6b4933885f5957f07a...
+  ciphertext_hash : b026bf26d1de970b486bdcb40250573d1e91d1875ddf778de7522284...
+  aad             : {"device_id":"dev-2c449872","protocol_version":1,"record_id":"rec-977580ad","record_type":"credential","record_version":1,"vault_id":"vault-468b6b55"}
+  plaintext 'GitHub' / username present in DB file? -> False
+
+========================================================================
+  4. DECRYPT + SEARCH (client-side, after integrity checks)
+========================================================================
+  GitHub           Work      agrim.dev@vitstudent.ac.in   D6R&mn****  v1  OK
+  SBI NetBanking   Banking   agrim_d                      yEHh3P****  v1  OK
+  VTOP Portal      Academic  23BAI0049                    6.RtF/****  v1  OK
+  search 'vtop'   -> ['VTOP Portal']
+  category=Banking-> ['SBI NetBanking']
+
+========================================================================
+  5. TEVHC AUDIT CHAIN
+========================================================================
+  #1  VAULT_CREATE -             -     prev=0000000000  mac=217a9029ce
+  #2  CREATE       rec-977580ad  v1    prev=217a9029ce  mac=db334152d5
+  #3  CREATE       rec-1977c66f  v1    prev=db334152d5  mac=45aae29e49
+  #4  CREATE       rec-61e12105  v1    prev=45aae29e49  mac=7a80c23cd1
+  #5  UPDATE       rec-977580ad  v2    prev=7a80c23cd1  mac=fac5af9fbb
+  chain valid     : True   length: 5   head: fac5af9fbbd0a717...
+
+========================================================================
+  6. ATTACK SIMULATIONS ON THE STORED DATABASE
+========================================================================
+  (a) flipped 1 bit of VTOP Portal ciphertext
+  (b) replaced SBI NetBanking v2 with its old (valid) v1 ciphertext  -> rollback
+      DETECTED: rec-1977c66f: TAMPERED - SHA-256 integrity check failed - ciphertext modified at rest
+      DETECTED: rec-61e12105: ROLLBACK DETECTED - stored v1, chain expects v2
+  (c) edited audit event #2 CREATE -> DELETE
+      DETECTED: Invalid MAC at seq 2 - event forged or edited
+  (d) deleted the newest audit event (history truncation)
+      DETECTED: History truncated/rolled back: device last saw seq 6, server has 5
+
+========================================================================
+  7. PASSWORD GENERATOR + STRENGTH ANALYSER
+========================================================================
+  password               score 0/4  Very weak       5.0 bits  policy=FAIL
+  abcd1234               score 0/4  Very weak      20.7 bits  policy=FAIL
+  Summer2026             score 2/4  Fair           59.5 bits  policy=FAIL
+  Tr0ub4dor&3xK!         score 3/4  Strong         92.0 bits  policy=PASS
+  /W3:JJ+!APbgw[=9~z?e   score 4/4  Very strong   131.4 bits  policy=PASS
+
+  Vault locked, VMK wiped: True

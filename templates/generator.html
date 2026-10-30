@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h1>Password generator</h1>
+  <p class="muted">Uses the OS CSPRNG (<code>secrets</code>) with at least one character from each selected class.</p>
+  <div class="genout"><code id="genpw">&nbsp;</code><button class="mini" data-action="copy-gen">Copy</button></div>
+  <div class="meter" id="meter"><div class="bar"></div><span class="label"></span><ul class="hints"></ul></div>
+  <form id="genform" class="genopts">
+    <label>Length <input type="range" name="length" min="8" max="64" value="20"> <span id="lenval">20</span></label>
+    <label class="chk"><input type="checkbox" name="upper" checked> Uppercase</label>
+    <label class="chk"><input type="checkbox" name="lower" checked> Lowercase</label>
+    <label class="chk"><input type="checkbox" name="digits" checked> Digits</label>
+    <label class="chk"><input type="checkbox" name="symbols" checked> Symbols</label>
+    <label class="chk"><input type="checkbox" name="ambiguous" checked> Exclude ambiguous (I, l, 1, O, 0)</label>
+    <button type="button" class="btn" data-action="regen">Generate</button>
+  </form>
+</section>
+{% endblock %}
